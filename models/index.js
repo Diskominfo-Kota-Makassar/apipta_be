@@ -47,5 +47,10 @@ Object.keys(db).forEach((modelName) => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 db.User = require("./user")(sequelize, Sequelize);
+db.Role = require("./role")(sequelize, Sequelize);
+
+//relation
+db.User.belongsTo(db.Role, { foreignKey: "role_id", as: "role" }); // Users belong to Role
+db.Role.hasMany(db.User, { foreignKey: "role_id", as: "users" });
 
 module.exports = db;

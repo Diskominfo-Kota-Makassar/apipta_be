@@ -20,7 +20,13 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
       },
       password: DataTypes.STRING,
-      role_id: DataTypes.INTEGER,
+      role_id: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "Role",
+          key: "id",
+        },
+      },
     },
     {
       sequelize,
@@ -33,5 +39,6 @@ module.exports = (sequelize, DataTypes) => {
       },
     }
   );
+
   return User;
 };

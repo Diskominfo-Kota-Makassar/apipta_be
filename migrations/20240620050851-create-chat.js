@@ -33,6 +33,10 @@ module.exports = {
         type: Sequelize.DATE,
       },
     });
+    await queryInterface.addColumn("chats", "judul", {
+      type: Sequelize.STRING,
+      allowNull: true, // or false if you require this field to be not null
+    });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable("chats");

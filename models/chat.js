@@ -18,6 +18,8 @@ module.exports = (sequelize, DataTypes) => {
       tim_id: DataTypes.INTEGER,
       penerima: DataTypes.STRING,
       pengirim: DataTypes.STRING,
+      judul: DataTypes.STRING,
+      isi: DataTypes.STRING,
     },
     {
       sequelize,
