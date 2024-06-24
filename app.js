@@ -5,9 +5,18 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: "https://apipta.makassarkota.com",
-    methods: "GET,POST,PUT,DELETE",
-    allowedHeaders: "Content-Type,Authorization",
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        "https://apipta.makassarkota.com",
+        "http://localhost:3030",
+      ];
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // Allows cookies to be sent from the front-end
   })
 );
 app.use(express.json());
