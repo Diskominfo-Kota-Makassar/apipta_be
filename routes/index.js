@@ -7,7 +7,7 @@ const roleController = require("../controllers/RoleController");
 //auth
 router.post("/register", rr.register);
 router.post("/login", rr.login);
-router.get("/user/all", rr.login);
+router.get("/user/all", rr.getall);
 
 //chats
 router.post("/chats", rc.save);
