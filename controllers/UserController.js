@@ -51,21 +51,9 @@ exports.login = async (req, res) => {
 exports.getall = async (req, res) => {
   try {
     const user = await db.User.findAll();
-    if (!user) {
-      return res
-        .status(401)
-        .json({ message: "Authentication failed. User not found." });
-    }
-
-    bcryptjs.compare(password, user.password, (err, result) => {
-      if (result) {
-        return res.status(200).json({ message: "Authentication successful!" });
-      } else {
-        return res
-          .status(401)
-          .json({ message: "Authentication failed. Passwords did not match." });
-      }
-    });
+    return res
+      .status(200)
+      .json({ message: "Authentication successful!", data: user });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });
