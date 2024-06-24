@@ -52,17 +52,17 @@ describe("Role API", () => {
     expect(response.body.data).toHaveProperty("name", updatedRole.name);
   });
 
-  // it("DELETE /roles/:id should delete a role", async () => {
-  //   const roleId = 1; // Assuming this ID exists and can be deleted in your test environment
+  it("DELETE /roles/:id should delete a role", async () => {
+    const roleId = 1; // Assuming this ID exists and can be deleted in your test environment
 
-  //   const response = await request(app)
-  //     .delete(`/api/roles/${roleId}`)
-  //     .expect(200);
+    const response = await request(app)
+      .delete(`/api/roles/${roleId}`)
+      .expect(200);
 
-  //   expect(response.status).toBe(200);
-  //   expect(response.body).toHaveProperty(
-  //     "message",
-  //     "Role deleted successfully!"
-  //   );
-  // });
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty(
+      "message",
+      "Role deleted successfully!"
+    );
+  });
 });

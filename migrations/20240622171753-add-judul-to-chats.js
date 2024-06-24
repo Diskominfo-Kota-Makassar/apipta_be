@@ -7,9 +7,14 @@ module.exports = {
       type: Sequelize.STRING,
       allowNull: true,
     });
+    await queryInterface.addColumn("chats", "isi", {
+      type: Sequelize.STRING,
+      allowNull: true,
+    });
   },
 
   async down(queryInterface, Sequelize) {
     await queryInterface.removeColumn("chats", "judul");
+    await queryInterface.removeColumn("chats", "isi");
   },
 };

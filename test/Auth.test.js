@@ -5,9 +5,21 @@ describe("Authentication API", () => {
   it("POST /api/register should register a new user", async () => {
     const newUser = {
       nama: "John Doe",
-      username: "john_doe22",
+      username: "john_doe222",
       password: "password123",
       role_id: 1,
+      entitas: "Entity Name", // Example static entity name
+      masa_berlaku: new Date(
+        new Date().setFullYear(new Date().getFullYear() + 1)
+      )
+        .toISOString()
+        .slice(0, 10), // One year from now
+      email: "john_doe22@example.com", // Random email
+      nip: Math.random().toString(36).substring(2, 12), // Random alphanumeric string
+      golongan: `Golongan ${Math.floor(Math.random() * 4) + 1}`, // Randomly assign between Golongan 1 to 4
+      jabatan: ["Manager", "Supervisor", "Staff", "Clerk"][
+        Math.floor(Math.random() * 4)
+      ], // Randomly select a job position
     };
 
     const response = await request(app)
