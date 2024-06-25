@@ -5,7 +5,7 @@ describe("Authentication API", () => {
   it("POST /api/register should register a new user", async () => {
     const newUser = {
       nama: "John Doe",
-      username: "john_doe222",
+      username: "345",
       password: "password123",
       role_id: 1,
       entitas: "Entity Name",
@@ -14,7 +14,7 @@ describe("Authentication API", () => {
       )
         .toISOString()
         .slice(0, 10),
-      email: "john_doe22@example.com",
+      email: "john_d4oe22@example.com",
       nip: Math.random().toString(36).substring(2, 12),
       golongan: `Golongan ${Math.floor(Math.random() * 4) + 1}`,
       jabatan: ["Manager", "Supervisor", "Staff", "Clerk"][

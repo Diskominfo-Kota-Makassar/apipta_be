@@ -3,16 +3,18 @@ const bcryptjs = require("bcryptjs");
 
 // Example of Create operation
 exports.register = async (req, res) => {
-  const { nama, username, password, role_id } = req.body;
+  // const { nama, username, password, role_id } = req.body;
 
   try {
-    const existingUser = await db.User.findOne({ where: { username } });
+    const existingUser = await db.User.findOne({
+      where: { username: req.body.username },
+    });
     if (existingUser) {
       return res.status(409).json({ message: "Username already exists." });
     }
 
     // Create new user
-    const user = await db.User.create({ nama, username, password, role_id });
+    const user = await db.User.create(req.body);
     res
       .status(201)
       .json({ message: "User registered successfully.", userId: user.id });

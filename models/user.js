@@ -20,6 +20,12 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
       },
       password: DataTypes.STRING,
+      masa_berlaku: DataTypes.DATE,
+      entitas: DataTypes.STRING,
+      email: DataTypes.STRING,
+      nip: DataTypes.STRING,
+      golongan: DataTypes.STRING,
+      jabatan: DataTypes.STRING,
       role_id: {
         type: DataTypes.INTEGER,
         references: {
