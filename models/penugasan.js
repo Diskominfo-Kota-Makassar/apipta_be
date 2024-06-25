@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Penugasan.init(
     {
-      No: DataTypes.STRING,
+      no: DataTypes.STRING,
       tgl: DataTypes.DATE,
       uraian: DataTypes.STRING,
       tgl_mulai: DataTypes.DATE,
@@ -21,7 +21,10 @@ module.exports = (sequelize, DataTypes) => {
       pj_id: DataTypes.INTEGER,
       wpj_id: DataTypes.INTEGER,
       dalnis_id: DataTypes.INTEGER,
-      tim_id: DataTypes.INTEGER,
+      tim_id: {
+        type: DataTypes.JSON, // Use JSON to store array
+        allowNull: true,
+      },
       kt_id: DataTypes.INTEGER,
     },
     {
