@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       no: DataTypes.STRING,
       tgl: DataTypes.DATE,
       uraian: DataTypes.STRING,
+      bpkp: DataTypes.STRING,
       tgl_mulai: DataTypes.DATE,
       tgl_berakhir: DataTypes.DATE,
       pj_id: DataTypes.INTEGER,

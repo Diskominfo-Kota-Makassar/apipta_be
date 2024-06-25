@@ -7,6 +7,7 @@ describe("Authentication API", () => {
       nama: "John Doe",
       username: "345",
       password: "password123",
+      bpkp: "ya",
       role_id: 1,
       entitas: "Entity Name",
       masa_berlaku: new Date(
