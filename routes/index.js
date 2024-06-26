@@ -8,7 +8,10 @@ const penugasan = require("../controllers/PenugasanController");
 //auth
 router.post("/register", rr.register);
 router.post("/login", rr.login);
+
+//user
 router.get("/user/all", rr.getall);
+router.delete("/user/:id", rr.delete);
 
 //chats
 router.post("/chats", rc.save);

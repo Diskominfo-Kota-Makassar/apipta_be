@@ -61,3 +61,19 @@ exports.getall = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+exports.delete = async (req, res) => {
+  const { id } = req.params; // assuming the role ID is passed as a URL parameter
+
+  try {
+    const user = await db.User.findOne({ where: { id: id } });
+    if (user) {
+      await user.destroy();
+      return res.status(200).json({ message: "user deleted successfully!" });
+    }
+    return res.status(404).json({ message: "user not found" });
+  } catch (error) {
+    console.error("Delete user Error:", error);
+    res.status(500).json({ message: "Error deleting user." });
+  }
+};

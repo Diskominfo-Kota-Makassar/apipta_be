@@ -15,8 +15,10 @@ exports.add = async (req, res) => {
 
 exports.get = async (req, res) => {
   try {
-    const role = await db.penugasan.findAll();
-    return res.status(200).json({ message: "Role successful!", data: role });
+    const penugasan = await db.penugasan.findAll();
+    return res
+      .status(200)
+      .json({ message: "penugasan successful!", data: penugasan });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });
@@ -25,8 +27,12 @@ exports.get = async (req, res) => {
 
 exports.getOne = async (req, res) => {
   try {
-    const role = await db.penugasan.findOne({ where: { id: req.params.id } });
-    return res.status(200).json({ message: "Role successful!", data: role });
+    const penugasan = await db.penugasan.findOne({
+      where: { id: req.params.id },
+    });
+    return res
+      .status(200)
+      .json({ message: "penugasan successful!", data: penugasan });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });
