@@ -9,6 +9,7 @@ app.use(
       const allowedOrigins = [
         "https://apipta.makassarkota.com",
         "http://localhost:3030",
+        "http://localhost:8863",
       ];
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
