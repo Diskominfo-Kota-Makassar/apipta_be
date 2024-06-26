@@ -3,23 +3,25 @@ const app = express();
 const routes = require("./routes");
 const cors = require("cors");
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      const allowedOrigins = [
-        "https://apipta.makassarkota.com",
-        "http://localhost:3030",
-        "http://localhost:8863",
-      ];
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true, // Allows cookies to be sent from the front-end
-  })
-);
+// Define the allowed origins
+const allowedOrigins = [
+  "https://apipta.makassarkota.com",
+  "http://localhost:3030",
+  "http://localhost:8863",
+];
+
+// CORS options
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  optionsSuccessStatus: 200, // For legacy browser support
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/api", routes);
 
