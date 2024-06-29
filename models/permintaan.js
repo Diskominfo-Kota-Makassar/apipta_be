@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       tgl_penugasan: DataTypes.DATE,
       uraian: DataTypes.STRING,
       no_ref_kka: DataTypes.STRING,
-      np_ref_pka: DataTypes.STRING,
+      no_ref_pka: DataTypes.STRING,
       judul_doc: DataTypes.STRING,
       ket: DataTypes.STRING,
       file: DataTypes.STRING,

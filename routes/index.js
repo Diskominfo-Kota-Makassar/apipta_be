@@ -1,9 +1,19 @@
 const express = require("express");
+const minioClient = require("../services/minio");
+const mime = require("mime-types");
 const router = express.Router();
+require("dotenv").config();
 const rr = require("../controllers/UserController");
 const rc = require("../controllers/ChatController");
 const roleController = require("../controllers/RoleController");
 const penugasan = require("../controllers/PenugasanController");
+const permintaan = require("../controllers/PermintaanController");
+const auditCon = require("../controllers/AuditKkaController");
+
+// Import multer and upload setup
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 //auth
 router.post("/register", rr.register);
@@ -30,13 +40,49 @@ router.get("/penugasan", penugasan.get);
 router.get("/penugasan/:id", penugasan.getOne);
 router.put("/penugasan/:id", penugasan.update);
 router.delete("/penugasan/:id", penugasan.delete);
+
+//permintaan
+router.post("/permintaan", upload.single("file"), permintaan.add);
+router.get("/permintaan", permintaan.get);
+router.get("/permintaan/:id", permintaan.getOne);
+router.put("/permintaan", permintaan.update);
+router.delete("/permintaan", permintaan.delete);
+
+//audit_kka
+router.post(
+  "/audit_kka",
+  upload.fields([
+    { name: "file_kesimpulan", maxCount: 1 }, // Single file upload for file_kesimpulan
+    { name: "file_bukti_dukung", maxCount: 1 }, // Single file upload for file_bukti_dukung
+    { name: "hasil_pengujian", maxCount: 5 }, // Up to 5 files for hasil_pengujian (adjust maxCount as needed)
+  ]),
+  auditCon.add
+);
+router.get("/audit_kka", auditCon.get);
+
 // Health check route
 router.get("/health", (req, res) => {
   res.status(200).send("Server is healthy!");
 });
-// router.get("/forms", bTamu.getAllForms);
-// router.get("/forms/:id", bTamu.getFormById);
-// router.put("/forms/:id", bTamu.updateForm);
-// router.delete("/forms/:id", bTamu.deleteForm);
+
+//? showfile MinIO
+router.get("/file/:objectName", (req, res) => {
+  const { objectName } = req.params;
+
+  minioClient.getObject(
+    process.env.MINIO_BUCKET,
+    objectName,
+    (err, dataStream) => {
+      if (err) {
+        return res.status(500).send(err);
+      }
+      const mimeType = mime.lookup(objectName) || "application/octet-stream";
+      res.setHeader("Content-Disposition", "inline");
+      res.setHeader("Content-Type", mimeType);
+
+      dataStream.pipe(res);
+    }
+  );
+});
 
 module.exports = router;
