@@ -13,7 +13,7 @@ exports.add = async (req, res) => {
   const fileName = Date.now() + "_" + req.file.originalname;
   const filePath = `${fileName}`;
   minioClient.putObject(
-    process.env.MINIO_BUCKET,
+    "inspektorat",
     filePath,
     req.file.buffer,
     (err, etag) => {
