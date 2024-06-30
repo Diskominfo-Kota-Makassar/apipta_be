@@ -47,7 +47,7 @@ router.get("/permintaan", permintaan.get);
 router.get("/permintaan/:id", permintaan.getOne);
 router.get("/permintaan/:id", permintaan.getOne);
 router.put("/permintaan", permintaan.update);
-router.delete("/permintaan", permintaan.delete);
+router.delete("/permintaan/:id", permintaan.delete);
 router.post("/permintaan/status", permintaan.updateStatus);
 
 //audit_kka
