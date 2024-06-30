@@ -43,7 +43,7 @@ exports.updateStatus = async (req, res) => {
 
   try {
     // Find the Permintaan record by id
-    const permintaan = await Permintaan.findByPk(id);
+    const permintaan = await db.permintaan.findOne({ id: id });
 
     if (!permintaan) {
       return res.status(404).json({ message: "Permintaan not found" });
