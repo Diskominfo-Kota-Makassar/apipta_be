@@ -45,8 +45,10 @@ router.delete("/penugasan/:id", penugasan.delete);
 router.post("/permintaan", upload.single("file"), permintaan.add);
 router.get("/permintaan", permintaan.get);
 router.get("/permintaan/:id", permintaan.getOne);
+router.get("/permintaan/:id", permintaan.getOne);
 router.put("/permintaan", permintaan.update);
 router.delete("/permintaan", permintaan.delete);
+router.post("/permintaan/status", permintaan.updateStatus);
 
 //audit_kka
 router.post(
@@ -59,6 +61,9 @@ router.post(
   auditCon.add
 );
 router.get("/audit_kka", auditCon.get);
+router.get("/audit_kka/:id", auditCon.getOne);
+router.put("/audit_kka", auditCon.update);
+router.delete("/audit_kka", auditCon.delete);
 
 // Health check route
 router.get("/health", (req, res) => {

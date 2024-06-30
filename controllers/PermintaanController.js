@@ -38,6 +38,32 @@ exports.add = async (req, res) => {
   );
 };
 
+exports.updateStatus = async (req, res) => {
+  const { id, status } = req.body;
+
+  try {
+    // Find the Permintaan record by id
+    const permintaan = await Permintaan.findByPk(id);
+
+    if (!permintaan) {
+      return res.status(404).json({ message: "Permintaan not found" });
+    }
+
+    // Update the status field
+    permintaan.status = status;
+
+    // Save the updated record
+    await permintaan.save();
+
+    return res
+      .status(200)
+      .json({ message: "Status updated successfully", permintaan });
+  } catch (error) {
+    console.error("Error updating status:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 exports.get = async (req, res) => {
   try {
     const permintaan = await db.permintaan.findAll();

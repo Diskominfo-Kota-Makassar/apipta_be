@@ -21,6 +21,11 @@ module.exports = (sequelize, DataTypes) => {
       judul_doc: DataTypes.STRING,
       ket: DataTypes.STRING,
       file: DataTypes.STRING,
+      status: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: 0,
+      },
     },
     {
       sequelize,
