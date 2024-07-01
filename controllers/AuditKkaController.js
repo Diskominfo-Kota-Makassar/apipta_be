@@ -2,18 +2,32 @@ const db = require("../models");
 const minioClient = require("../services/minio");
 require("dotenv").config();
 
+exports.firstAdd = async (req, res) => {
+  const { no_penugasan, no_ref_kka, no_ref_pka, judul, tim_anggota } = req.body;
+
+  try {
+    // Create audit_kka entry in the database
+    const newAuditKka = await db.Audit.create({
+      no_penugasan,
+      no_ref_kka,
+      no_ref_pka,
+      judul,
+      tim_anggota,
+    });
+
+    res.status(201).send({
+      message: "Audit KKA first created successfully!",
+      auditKka: newAuditKka,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(err);
+  }
+};
+
 exports.add = async (req, res) => {
-  const {
-    no_penugasan,
-    no_ref_kka,
-    no_ref_pka,
-    judul,
-    tim_anggota,
-    tim_ketua,
-    catatan_review,
-    catatan_wpj,
-    hasil_pengujian,
-  } = req.body;
+  const { id_audit, tim_ketua, catatan_review, catatan_wpj, hasil_pengujian } =
+    req.body;
 
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send("No files uploaded.");
@@ -56,19 +70,19 @@ exports.add = async (req, res) => {
     }
 
     // Create audit_kka entry in the database
-    const newAuditKka = await db.Audit.create({
-      no_penugasan,
-      no_ref_kka,
-      no_ref_pka,
-      judul,
-      tim_anggota,
-      tim_ketua,
-      catatan_review,
-      catatan_wpj,
-      file_kesimpulan: fileKesimpulanPath,
-      file_bukti_dukung: fileBuktiDukungPath,
-      hasil_pengujian: hasilPengujianPaths,
-    });
+    const newAuditKka = await db.Audit.update(
+      {
+        tim_ketua,
+        catatan_review,
+        catatan_wpj,
+        file_kesimpulan: fileKesimpulanPath,
+        file_bukti_dukung: fileBuktiDukungPath,
+        hasil_pengujian: hasilPengujianPaths,
+      },
+      {
+        where: { id: id_audit },
+      }
+    );
 
     res.status(201).send({
       message: "Audit KKA created successfully!",

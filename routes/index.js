@@ -51,6 +51,7 @@ router.delete("/permintaan/:id", permintaan.delete);
 router.post("/permintaan/status", permintaan.updateStatus);
 
 //audit_kka
+router.post("/audit_kka/awal", auditCon.firstAdd);
 router.post(
   "/audit_kka",
   upload.fields([
