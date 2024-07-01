@@ -48,16 +48,18 @@ exports.updateStatus = async (req, res) => {
     if (!permintaan) {
       return res.status(404).json({ message: "Permintaan not found" });
     }
-
-    // Update the status field
-    permintaan.status = status;
-
-    // Save the updated record
-    await db.permintaan.save();
+    const permintaanUpdate = await db.permintaan.update(
+      {
+        status: status,
+      },
+      {
+        where: { id: id },
+      }
+    );
 
     return res
       .status(200)
-      .json({ message: "Status updated successfully", permintaan });
+      .json({ message: "Status updated successfully", permintaanUpdate });
   } catch (error) {
     console.error("Error updating status:", error);
     return res.status(500).json({ message: "Internal server error" });
