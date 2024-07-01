@@ -53,7 +53,7 @@ exports.updateStatus = async (req, res) => {
     permintaan.status = status;
 
     // Save the updated record
-    await permintaan.save();
+    await db.permintaan.save();
 
     return res
       .status(200)
