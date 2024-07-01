@@ -42,24 +42,28 @@ exports.updateStatus = async (req, res) => {
   const { id, status } = req.body;
 
   try {
-    // Find the Permintaan record by id
-    const permintaan = await db.permintaan.findOne({ id: id });
+    // Ensure ID is provided
+    if (!id) {
+      return res.status(400).json({ message: "Missing ID parameter" });
+    }
 
+    // Find the Permintaan record by id
+    const permintaan = await db.permintaan.findByPk(id);
+
+    // Check if the permintaan exists
     if (!permintaan) {
+      console.log(`No permintaan found with ID: ${id}`); // Debug log
       return res.status(404).json({ message: "Permintaan not found" });
     }
-    const permintaanUpdate = await db.permintaan.update(
-      {
-        status: status,
-      },
-      {
-        where: { id: id },
-      }
-    );
 
-    return res
-      .status(200)
-      .json({ message: "Status updated successfully", permintaanUpdate });
+    // Update the status
+    await permintaan.update({ status });
+
+    // Respond with success
+    return res.status(200).json({
+      message: "Status updated successfully",
+      permintaan: { id: permintaan.id, status: permintaan.status },
+    });
   } catch (error) {
     console.error("Error updating status:", error);
     return res.status(500).json({ message: "Internal server error" });
