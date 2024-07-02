@@ -63,8 +63,8 @@ router.post(
 );
 router.get("/audit_kka", auditCon.get);
 router.get("/audit_kka/:id", auditCon.getOne);
-router.put("/audit_kka", auditCon.update);
-router.delete("/audit_kka", auditCon.delete);
+router.put("/audit_kka/:id", auditCon.update);
+router.delete("/audit_kka/:id", auditCon.delete);
 
 // Health check route
 router.get("/health", (req, res) => {

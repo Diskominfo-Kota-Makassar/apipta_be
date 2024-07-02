@@ -15,7 +15,10 @@ module.exports = (sequelize, DataTypes) => {
       no_ref_kka: DataTypes.STRING,
       no_ref_pka: DataTypes.STRING,
       judul: DataTypes.STRING,
-      tim_anggota: DataTypes.STRING,
+      tim_anggota: {
+        type: DataTypes.JSON, // Use JSON to store array
+        allowNull: true,
+      },
       tim_ketua: DataTypes.STRING,
       catatan_review: DataTypes.TEXT,
       catatan_wpj: DataTypes.TEXT,
