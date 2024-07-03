@@ -53,6 +53,12 @@ router.post("/permintaan/status", permintaan.updateStatus);
 //audit_kka
 router.post("/audit_kka/awal", auditCon.firstAdd);
 router.post(
+  "/audit_kka/user/file",
+  upload.single("file"),
+  auditCon.userFileAdd
+);
+router.get("/audit_kka/user/file/:id_penugasan", auditCon.userFileGet);
+router.post(
   "/audit_kka",
   upload.fields([
     { name: "file_kesimpulan", maxCount: 1 }, // Single file upload for file_kesimpulan

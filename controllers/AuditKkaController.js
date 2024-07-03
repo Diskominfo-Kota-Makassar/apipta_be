@@ -25,6 +25,49 @@ exports.firstAdd = async (req, res) => {
   }
 };
 
+exports.userFileGet = async (req, res) => {
+  try {
+    const auditKka = await db.UserFile.findAll({
+      where: {
+        penugasan_id: req.params.id_penugasan,
+      },
+    });
+    return res
+      .status(200)
+      .json({ message: "userfile successful!", data: auditKka });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.userFileAdd = async (req, res) => {
+  const { id_penugasan, id_user } = req.body;
+  if (!req.file) {
+    return res.status(400).send("No file uploaded.");
+  }
+  try {
+    const fileName = Date.now() + "_" + req.file.originalname;
+    const filePath = `${fileName}`;
+    await minioClient.putObject(
+      process.env.MINIO_BUCKET,
+      filePath,
+      req.file.buffer
+    );
+    const newUserFile = await db.UserFile.create({
+      user_id,
+      penugasan_id,
+      file_kesimpulan: filePath,
+    });
+    res.status(201).send({
+      message: "UserFile created successfully!",
+      auditKka: newAuditKka,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(err);
+  }
+};
 exports.add = async (req, res) => {
   const { id_audit, tim_ketua, catatan_review, catatan_wpj, hasil_pengujian } =
     req.body;
