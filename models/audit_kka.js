@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       catatan_wpj: DataTypes.TEXT,
       file_kesimpulan: DataTypes.STRING,
       file_bukti_dukung: DataTypes.STRING,
+      file_obrik: DataTypes.STRING,
       hasil_pengujian: {
         type: DataTypes.JSON,
       },

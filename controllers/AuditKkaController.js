@@ -41,6 +41,38 @@ exports.userFileGet = async (req, res) => {
   }
 };
 
+exports.obrikFileAdd = async (req, res) => {
+  const { id_audit, obrik } = req.body;
+  if (!req.file) {
+    return res.status(400).send("No file uploaded.");
+  }
+  try {
+    const fileName = Date.now() + "_" + req.file.originalname;
+    const filePath = `${fileName}`;
+    await minioClient.putObject(
+      process.env.MINIO_BUCKET,
+      filePath,
+      req.file.buffer
+    );
+    const newUserFile = await db.UserFile.create(
+      {
+        obrik,
+        file_obrik: filePath,
+      },
+      {
+        where: { id: id_audit },
+      }
+    );
+    res.status(201).send({
+      message: "UserFile created successfully!",
+      auditKka: newAuditKka,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(err);
+  }
+};
+
 exports.userFileAdd = async (req, res) => {
   const { id_penugasan, id_user } = req.body;
   if (!req.file) {
