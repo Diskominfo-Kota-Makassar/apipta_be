@@ -13,9 +13,48 @@ exports.add = async (req, res) => {
   }
 };
 
+exports.addRekom = async (req, res) => {
+  const { id_kompilasi, masukan } = req.body;
+
+  try {
+    // Create new kompilasi
+    const dataa = await db.Rekomendasi.create({ id_kompilasi, masukan });
+    res.status(201).json({ message: "kompilasi.", data: dataa });
+  } catch (error) {
+    console.error("kompilasi Error:", error);
+    res.status(500).json({ message: "Error registering new kompilasi." });
+  }
+};
+
+exports.addAksi = async (req, res) => {
+  const { id_rekomendasi, masukan } = req.body;
+
+  try {
+    // Create new kompilasi
+    const dataa = await db.Aksi.create({ id_rekomendasi, masukan });
+    res.status(201).json({ message: "kompilasi.", data: dataa });
+  } catch (error) {
+    console.error("kompilasi Error:", error);
+    res.status(500).json({ message: "Error registering new kompilasi." });
+  }
+};
+
 exports.get = async (req, res) => {
   try {
-    const kompilasi = await db.Kompilasi.findAll();
+    const kompilasi = await db.Kompilasi.findAll({
+      include: [
+        {
+          model: db.Rekomendasi,
+          as: "rekomendasis", // Use the alias defined in the association
+          include: [
+            {
+              model: db.Aksi,
+              as: "aksis", // Use the alias defined in the association
+            },
+          ],
+        },
+      ],
+    });
     return res
       .status(200)
       .json({ message: "kompilasi successful!", data: kompilasi });

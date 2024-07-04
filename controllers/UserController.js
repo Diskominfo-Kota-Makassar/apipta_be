@@ -54,7 +54,14 @@ exports.login = async (req, res) => {
 
 exports.getall = async (req, res) => {
   try {
-    const user = await db.User.findAll();
+    const user = await db.User.findAll({
+      include: [
+        {
+          model: db.Role,
+          as: "role",
+        },
+      ],
+    });
     return res
       .status(200)
       .json({ message: "Authentication successful!", data: user });

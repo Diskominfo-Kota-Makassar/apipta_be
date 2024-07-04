@@ -51,7 +51,14 @@ db.Role = require("./role")(sequelize, Sequelize);
 db.Audit = require("./audit_kka")(sequelize, Sequelize);
 db.UserFile = require("./user_file")(sequelize, Sequelize);
 db.Kompilasi = require("./kompilasi")(sequelize, Sequelize);
+db.Rekomendasi = require("./rekomendasi")(sequelize, Sequelize);
+db.Aksi = require("./aksi")(sequelize, Sequelize);
 
+Object.keys(db).forEach((modelName) => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
 //relation
 db.User.belongsTo(db.Role, { foreignKey: "role_id", as: "role" }); // Users belong to Role
 db.Role.hasMany(db.User, { foreignKey: "role_id", as: "users" });

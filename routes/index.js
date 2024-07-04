@@ -37,6 +37,8 @@ router.delete("/roles/:id", roleController.delete);
 
 //kompilasi
 router.post("/kompilasi", kompilasiCont.add);
+router.post("/rekomendasi", kompilasiCont.addRekom);
+router.post("/aksi", kompilasiCont.addAksi);
 router.get("/kompilasi", kompilasiCont.get);
 router.get("/kompilasi/:id", kompilasiCont.getOne);
 router.put("/kompilasi/:id", kompilasiCont.update);
