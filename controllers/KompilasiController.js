@@ -25,6 +25,20 @@ exports.get = async (req, res) => {
   }
 };
 
+exports.getOne = async (req, res) => {
+  try {
+    const kompilasi = await db.Kompilasi.findOne({
+      where: { id: req.params.id },
+    });
+    return res
+      .status(200)
+      .json({ message: "kompilasi successful!", data: kompilasi });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 exports.update = async (req, res) => {
   const { id } = req.params; // assuming the kompilasi ID is passed as a URL parameter
 
