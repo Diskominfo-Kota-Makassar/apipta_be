@@ -86,7 +86,7 @@ exports.bpkpFileAdd = async (req, res) => {
       filePath,
       req.file.buffer
     );
-    const newUserFile = await db.Audit.update(
+    await db.Audit.update(
       {
         bpkp,
         file_bpkp: filePath,
@@ -97,11 +97,10 @@ exports.bpkpFileAdd = async (req, res) => {
     );
     res.status(201).send({
       message: "UserFile created successfully!",
-      auditKka: newAuditKka,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).send(err);
+    res.status(500).send(err.message || "Internal Server Error");
   }
 };
 
