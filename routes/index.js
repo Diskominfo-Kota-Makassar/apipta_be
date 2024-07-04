@@ -72,6 +72,12 @@ router.post(
   upload.single("file"),
   auditCon.obrikFileAdd
 );
+
+router.post(
+  "/audit_kka/bpkp/file",
+  upload.single("file"),
+  auditCon.bpkpFileAdd
+);
 router.get("/audit_kka/user/file/:id_penugasan", auditCon.userFileGet);
 router.post(
   "/audit_kka",

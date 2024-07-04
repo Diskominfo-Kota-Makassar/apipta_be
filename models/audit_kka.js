@@ -29,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       file_kesimpulan: DataTypes.STRING,
       file_bukti_dukung: DataTypes.STRING,
       file_obrik: DataTypes.STRING,
+      file_bpkp: DataTypes.STRING,
       hasil_pengujian: {
         type: DataTypes.JSON,
       },

@@ -54,10 +54,42 @@ exports.obrikFileAdd = async (req, res) => {
       filePath,
       req.file.buffer
     );
-    const newUserFile = await db.UserFile.create(
+    const newUserFile = await db.Audit.update(
       {
         obrik,
         file_obrik: filePath,
+      },
+      {
+        where: { id: id_audit },
+      }
+    );
+    res.status(201).send({
+      message: "UserFile created successfully!",
+      auditKka: newAuditKka,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(err);
+  }
+};
+
+exports.bpkpFileAdd = async (req, res) => {
+  const { id_audit, bpkp } = req.body;
+  if (!req.file) {
+    return res.status(400).send("No file uploaded.");
+  }
+  try {
+    const fileName = Date.now() + "_" + req.file.originalname;
+    const filePath = `${fileName}`;
+    await minioClient.putObject(
+      process.env.MINIO_BUCKET,
+      filePath,
+      req.file.buffer
+    );
+    const newUserFile = await db.Audit.update(
+      {
+        bpkp,
+        file_bpkp: filePath,
       },
       {
         where: { id: id_audit },
@@ -81,6 +113,7 @@ exports.userFileAdd = async (req, res) => {
   try {
     const fileName = Date.now() + "_" + req.file.originalname;
     const filePath = `${fileName}`;
+
     await minioClient.putObject(
       process.env.MINIO_BUCKET,
       filePath,
@@ -89,7 +122,7 @@ exports.userFileAdd = async (req, res) => {
     const newUserFile = await db.UserFile.create({
       user_id,
       penugasan_id,
-      file_kesimpulan: filePath,
+      file: filePath,
     });
     res.status(201).send({
       message: "UserFile created successfully!",
@@ -100,6 +133,7 @@ exports.userFileAdd = async (req, res) => {
     res.status(500).send(err);
   }
 };
+
 exports.add = async (req, res) => {
   const { id_audit, tim_ketua, catatan_review, catatan_wpj, hasil_pengujian } =
     req.body;
