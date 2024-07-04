@@ -37,7 +37,9 @@ exports.login = async (req, res) => {
 
     bcryptjs.compare(password, user.password, (err, result) => {
       if (result) {
-        return res.status(200).json({ message: "Authentication successful!" });
+        return res
+          .status(200)
+          .json({ message: "Authentication successful!", data: user });
       } else {
         return res
           .status(401)
