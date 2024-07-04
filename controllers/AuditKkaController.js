@@ -74,7 +74,7 @@ exports.obrikFileAdd = async (req, res) => {
 };
 
 exports.userFileAdd = async (req, res) => {
-  const { id_penugasan, id_user } = req.body;
+  const { penugasan_id, user_id } = req.body;
   if (!req.file) {
     return res.status(400).send("No file uploaded.");
   }
@@ -93,7 +93,7 @@ exports.userFileAdd = async (req, res) => {
     });
     res.status(201).send({
       message: "UserFile created successfully!",
-      auditKka: newAuditKka,
+      auditKka: newUserFile,
     });
   } catch (err) {
     console.error(err);
