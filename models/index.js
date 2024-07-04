@@ -50,6 +50,7 @@ db.User = require("./user")(sequelize, Sequelize);
 db.Role = require("./role")(sequelize, Sequelize);
 db.Audit = require("./audit_kka")(sequelize, Sequelize);
 db.UserFile = require("./user_file")(sequelize, Sequelize);
+db.Kompilasi = require("./kompilasi")(sequelize, Sequelize);
 
 //relation
 db.User.belongsTo(db.Role, { foreignKey: "role_id", as: "role" }); // Users belong to Role

@@ -6,6 +6,7 @@ require("dotenv").config();
 const rr = require("../controllers/UserController");
 const rc = require("../controllers/ChatController");
 const roleController = require("../controllers/RoleController");
+const kompilasiCont = require("../controllers/KompilasiController");
 const penugasan = require("../controllers/PenugasanController");
 const permintaan = require("../controllers/PermintaanController");
 const auditCon = require("../controllers/AuditKkaController");
@@ -33,6 +34,12 @@ router.get("/roles", roleController.get);
 router.get("/roles/user", roleController.getAllRolesWithUsers);
 router.put("/roles/:id", roleController.update);
 router.delete("/roles/:id", roleController.delete);
+
+//kompilasi
+router.post("/kompilasi", kompilasiCont.add);
+router.get("/kompilasi", kompilasiCont.get);
+router.put("/kompilasi/:id", kompilasiCont.update);
+router.delete("/kompilasi/:id", kompilasiCont.delete);
 
 //roles
 router.post("/penugasan", penugasan.add);
