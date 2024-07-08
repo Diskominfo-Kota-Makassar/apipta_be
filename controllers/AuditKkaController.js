@@ -32,6 +32,26 @@ exports.userFileGet = async (req, res) => {
         penugasan_id: req.params.id_penugasan,
       },
     });
+
+    for (let i = 0; i < auditKka.length; i++) {
+      const user = await db.User.findOne({
+        where: { id: auditKka[i].user_id },
+        include: [
+          {
+            model: db.Role,
+            as: "role",
+          },
+        ],
+      });
+
+      // Convert to plain object if necessary
+      if (auditKka[i].toJSON) {
+        auditKka[i] = auditKka[i].toJSON();
+      }
+
+      auditKka[i]["user"] = user ? user.toJSON() : null; // Add user data with role
+    }
+
     return res
       .status(200)
       .json({ message: "userfile successful!", data: auditKka });
