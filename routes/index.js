@@ -109,8 +109,10 @@ router.get("/file/:objectName", (req, res) => {
     objectName,
     (err, dataStream) => {
       if (err) {
-        return res.status(500).send(err);
+        console.error("Error fetching object from MinIO:", err);
+        return res.status(500).json({ error: "Internal Server Error" });
       }
+
       const mimeType = mime.lookup(objectName) || "application/octet-stream";
       res.setHeader("Content-Disposition", "inline");
       res.setHeader("Content-Type", mimeType);
@@ -118,6 +120,11 @@ router.get("/file/:objectName", (req, res) => {
         "Cache-Control",
         "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
       );
+
+      dataStream.on("error", (streamErr) => {
+        console.error("Error during streaming:", streamErr);
+        res.status(500).json({ error: "Error during streaming" });
+      });
 
       dataStream.pipe(res);
     }
