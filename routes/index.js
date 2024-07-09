@@ -79,6 +79,7 @@ router.post(
   auditCon.bpkpFileAdd
 );
 router.get("/audit_kka/user/file/:id_penugasan", auditCon.userFileGet);
+
 router.post(
   "/audit_kka",
   upload.fields([
@@ -90,6 +91,7 @@ router.post(
 );
 router.get("/audit_kka", auditCon.get);
 router.get("/audit_kka/:id", auditCon.getOne);
+router.get("/audit_kka/:no_penugasan", auditCon.getOnePenugasan);
 router.put("/audit_kka/:id", auditCon.update);
 router.delete("/audit_kka/:id", auditCon.delete);
 

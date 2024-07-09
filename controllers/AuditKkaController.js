@@ -248,6 +248,20 @@ exports.getOne = async (req, res) => {
   }
 };
 
+exports.getOnePenugasan = async (req, res) => {
+  try {
+    const auditKka = await db.Audit.findOne({
+      where: { id: req.params.id },
+    });
+    return res
+      .status(200)
+      .json({ message: "auditKka successful!", data: auditKka });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 exports.update = async (req, res) => {
   const { id } = req.params; // assuming the role ID is passed as a URL parameter
 
