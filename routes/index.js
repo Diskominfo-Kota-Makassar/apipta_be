@@ -114,6 +114,10 @@ router.get("/file/:objectName", (req, res) => {
       const mimeType = mime.lookup(objectName) || "application/octet-stream";
       res.setHeader("Content-Disposition", "inline");
       res.setHeader("Content-Type", mimeType);
+      res.setHeader(
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+      );
 
       dataStream.pipe(res);
     }
