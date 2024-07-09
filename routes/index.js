@@ -91,7 +91,7 @@ router.post(
 );
 router.get("/audit_kka", auditCon.get);
 router.get("/audit_kka/:id", auditCon.getOne);
-router.get("/audit_kka/:no_penugasan", auditCon.getOnePenugasan);
+router.get("/audit_kka/:id_penugasan", auditCon.getOnePenugasan);
 router.put("/audit_kka/:id", auditCon.update);
 router.delete("/audit_kka/:id", auditCon.delete);
 

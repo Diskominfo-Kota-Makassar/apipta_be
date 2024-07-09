@@ -250,12 +250,17 @@ exports.getOne = async (req, res) => {
 
 exports.getOnePenugasan = async (req, res) => {
   try {
-    const auditKka = await db.Audit.findOne({
-      where: { id: req.params.id },
+    const penugasan = await db.penugasan.findOne({
+      where: { id: req.params.id_penugasan },
     });
-    return res
-      .status(200)
-      .json({ message: "auditKka successful!", data: auditKka });
+    if (penugasan != null) {
+      const auditKka = await db.Audit.findAll({
+        where: { no_penugasan: penugasan.no_penugasan },
+      });
+      return res
+        .status(200)
+        .json({ message: "auditKka successful!", data: auditKka });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });
