@@ -254,13 +254,16 @@ exports.getOnePenugasan = async (req, res) => {
       where: { id: req.params.id_penugasan },
     });
     if (penugasan != null) {
+      console.log("askjdnasjkndjasd");
+      console.log(penugasan);
       const auditKka = await db.Audit.findAll({
-        where: { no_penugasan: penugasan.no_penugasan },
+        where: { no_penugasan: penugasan.no },
       });
       return res
         .status(200)
         .json({ message: "auditKka successful!", data: auditKka });
     }
+    return res.status(200).json({ message: "Not found" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });
