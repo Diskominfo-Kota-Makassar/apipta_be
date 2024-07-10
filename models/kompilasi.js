@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       kriteria: DataTypes.STRING,
       sebab: DataTypes.STRING,
       akibat: DataTypes.STRING,
+      no_lhp: DataTypes.STRING,
       rekomendasi: DataTypes.STRING,
       aksi: DataTypes.STRING,
     },

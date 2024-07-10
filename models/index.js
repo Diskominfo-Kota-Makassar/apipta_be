@@ -53,6 +53,7 @@ db.UserFile = require("./user_file")(sequelize, Sequelize);
 db.Kompilasi = require("./kompilasi")(sequelize, Sequelize);
 db.Rekomendasi = require("./rekomendasi")(sequelize, Sequelize);
 db.Aksi = require("./aksi")(sequelize, Sequelize);
+db.Notif = require("./notif")(sequelize, Sequelize);
 
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {

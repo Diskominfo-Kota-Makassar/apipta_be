@@ -119,3 +119,35 @@ exports.delete = async (req, res) => {
     res.status(500).json({ message: "Error deleting kompilasi." });
   }
 };
+exports.deleteRekomendasi = async (req, res) => {
+  const { id } = req.params; // assuming the kompilasi ID is passed as a URL parameter
+
+  try {
+    const kompilasi = await db.Rekomendasi.findOne({ where: { id: id } });
+    if (kompilasi) {
+      await kompilasi.destroy();
+      return res
+        .status(200)
+        .json({ message: "rekomendasi deleted successfully!" });
+    }
+    return res.status(404).json({ message: "kompilasi not found" });
+  } catch (error) {
+    console.error("Delete kompilasi Error:", error);
+    res.status(500).json({ message: "Error deleting kompilasi." });
+  }
+};
+exports.deleteAksi = async (req, res) => {
+  const { id } = req.params; // assuming the kompilasi ID is passed as a URL parameter
+
+  try {
+    const kompilasi = await db.Aksi.findOne({ where: { id: id } });
+    if (kompilasi) {
+      await kompilasi.destroy();
+      return res.status(200).json({ message: "aksi deleted successfully!" });
+    }
+    return res.status(404).json({ message: "kompilasi not found" });
+  } catch (error) {
+    console.error("Delete kompilasi Error:", error);
+    res.status(500).json({ message: "Error deleting kompilasi." });
+  }
+};

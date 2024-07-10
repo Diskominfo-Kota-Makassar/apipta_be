@@ -10,6 +10,7 @@ const kompilasiCont = require("../controllers/KompilasiController");
 const penugasan = require("../controllers/PenugasanController");
 const permintaan = require("../controllers/PermintaanController");
 const auditCon = require("../controllers/AuditKkaController");
+const notifCon = require("../controllers/NotifController");
 
 // Import multer and upload setup
 const multer = require("multer");
@@ -43,6 +44,8 @@ router.get("/kompilasi", kompilasiCont.get);
 router.get("/kompilasi/:id", kompilasiCont.getOne);
 router.put("/kompilasi/:id", kompilasiCont.update);
 router.delete("/kompilasi/:id", kompilasiCont.delete);
+router.delete("/kompilasi/aksi/:id", kompilasiCont.deleteAksi);
+router.delete("/kompilasi/rekomendasi/:id", kompilasiCont.deleteRekomendasi);
 
 //roles
 router.post("/penugasan", penugasan.add);
@@ -50,6 +53,14 @@ router.get("/penugasan", penugasan.get);
 router.get("/penugasan/:id", penugasan.getOne);
 router.put("/penugasan/:id", penugasan.update);
 router.delete("/penugasan/:id", penugasan.delete);
+
+//notif
+router.post("/notif", notifCon.add);
+router.get("/notif/by/user/:id_user", notifCon.getByUser);
+router.get("/notif", notifCon.get);
+router.get("/notif/read/:id/:id_user", notifCon.baca); //untuk baca kirim id notif dan id user
+router.put("/notif/:id", notifCon.update);
+router.delete("/notif/:id", notifCon.delete);
 
 //permintaan
 router.post("/permintaan", upload.single("file"), permintaan.add);
