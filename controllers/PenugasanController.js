@@ -2,7 +2,7 @@ const db = require("../models");
 
 exports.add = async (req, res) => {
   try {
-    const penugasan = await db.penugasan.create({
+    const penugasan = await db.Penugasan.create({
       ...req.body,
       tim_id: JSON.stringify(req.body.tim_id), // Ensure tim_id is serialized; only necessary if DB or Sequelize doesn't handle it automatically
     });
@@ -15,7 +15,7 @@ exports.add = async (req, res) => {
 
 exports.get = async (req, res) => {
   try {
-    const penugasan = await db.penugasan.findAll();
+    const penugasan = await db.Penugasan.findAll();
     return res
       .status(200)
       .json({ message: "penugasan successful!", data: penugasan });
@@ -27,7 +27,7 @@ exports.get = async (req, res) => {
 
 exports.getOne = async (req, res) => {
   try {
-    const penugasan = await db.penugasan.findOne({
+    const penugasan = await db.Penugasan.findOne({
       where: { id: req.params.id },
     });
     return res
@@ -43,12 +43,12 @@ exports.update = async (req, res) => {
   const { id } = req.params; // assuming the role ID is passed as a URL parameter
 
   try {
-    const [updated] = await db.penugasan.update(req.body, {
+    const [updated] = await db.Penugasan.update(req.body, {
       where: { id: id },
     });
 
     if (updated) {
-      const updatedData = await db.penugasan.findOne({ where: { id: id } });
+      const updatedData = await db.Penugasan.findOne({ where: { id: id } });
       return res.status(200).json({
         message: "penugasan updated successfully!",
         data: updatedData,
@@ -65,7 +65,7 @@ exports.delete = async (req, res) => {
   const { id } = req.params; // assuming the role ID is passed as a URL parameter
 
   try {
-    const penugasan = await db.penugasan.findOne({ where: { id: id } });
+    const penugasan = await db.Penugasan.findOne({ where: { id: id } });
     if (penugasan) {
       await penugasan.destroy();
       return res
