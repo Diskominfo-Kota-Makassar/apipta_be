@@ -24,8 +24,6 @@ module.exports = (sequelize, DataTypes) => {
       sebab: DataTypes.STRING,
       akibat: DataTypes.STRING,
       no_lhp: DataTypes.STRING,
-      rekomendasi: DataTypes.STRING,
-      aksi: DataTypes.STRING,
     },
     {
       sequelize,
