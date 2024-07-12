@@ -250,7 +250,7 @@ exports.getOne = async (req, res) => {
 
 exports.getOnePenugasan = async (req, res) => {
   try {
-    const penugasan = await db.penugasan.findOne({
+    const penugasan = await db.Penugasan.findOne({
       where: { id: req.params.id_penugasan },
     });
     if (penugasan != null) {
