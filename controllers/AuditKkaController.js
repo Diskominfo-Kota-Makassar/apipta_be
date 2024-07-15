@@ -3,7 +3,14 @@ const minioClient = require("../services/minio");
 require("dotenv").config();
 
 exports.firstAdd = async (req, res) => {
-  const { no_penugasan, no_ref_kka, no_ref_pka, judul, tim_anggota } = req.body;
+  const {
+    no_penugasan,
+    no_ref_kka,
+    no_ref_pka,
+    judul,
+    tim_anggota,
+    rincian_pengujian,
+  } = req.body;
 
   try {
     // Create audit_kka entry in the database
@@ -13,6 +20,7 @@ exports.firstAdd = async (req, res) => {
       no_ref_pka,
       judul,
       tim_anggota,
+      rincian_pengujian,
     });
 
     res.status(201).send({
