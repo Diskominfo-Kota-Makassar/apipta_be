@@ -25,7 +25,7 @@ exports.save = async (req, res) => {
 exports.getchat = async (req, res) => {
   try {
     const pengirim = req.params.pengirim;
-    const chat = await db.chat.findOne({
+    const chat = await db.chat.findAll({
       where: { pengirim: pengirim },
     });
     if (chat) {
