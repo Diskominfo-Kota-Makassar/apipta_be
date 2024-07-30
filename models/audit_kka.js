@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       dalnis: DataTypes.STRING,
       catatan_review: DataTypes.TEXT,
       catatan_wpj: DataTypes.TEXT,
+      catatan_kpk: DataTypes.TEXT,
       file_kesimpulan: DataTypes.STRING,
       file_bukti_dukung: DataTypes.STRING,
       file_obrik: DataTypes.STRING,
