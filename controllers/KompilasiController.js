@@ -26,6 +26,30 @@ exports.addRekom = async (req, res) => {
   }
 };
 
+exports.UpdateRekom = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Create new kompilasi
+    const [updated] = await db.Rekomendasi.update(req.body, {
+      where: { id: id },
+    });
+    if (updated) {
+      const updatedkompilasi = await db.Kompilasi.findOne({
+        where: { id: id },
+      });
+      return res.status(200).json({
+        message: "Rekomendasi updated successfully!",
+        data: updatedkompilasi,
+      });
+    }
+    throw new Error("kompilasi not found");
+  } catch (error) {
+    console.error("kompilasi Error:", error);
+    res.status(500).json({ message: "Error update  kompilasi." });
+  }
+};
+
 exports.addAksi = async (req, res) => {
   const { id_rekomendasi, masukan } = req.body;
 

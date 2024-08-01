@@ -43,6 +43,7 @@ router.post("/aksi", kompilasiCont.addAksi);
 router.get("/kompilasi", kompilasiCont.get);
 router.get("/kompilasi/:id", kompilasiCont.getOne);
 router.put("/kompilasi/:id", kompilasiCont.update);
+router.post("/rekomendasi/:id", kompilasiCont.UpdateRekom);
 router.delete("/kompilasi/:id", kompilasiCont.delete);
 router.delete("/kompilasi/aksi/:id", kompilasiCont.deleteAksi);
 router.delete("/kompilasi/rekomendasi/:id", kompilasiCont.deleteRekomendasi);
@@ -67,7 +68,7 @@ router.post("/permintaan", upload.single("file"), permintaan.add);
 router.get("/permintaan", permintaan.get);
 router.get("/permintaan/:id", permintaan.getOne);
 router.get("/permintaan/:id", permintaan.getOne);
-router.put("/permintaan", permintaan.update);
+router.put("/permintaan/:id", permintaan.update);
 router.delete("/permintaan/:id", permintaan.delete);
 router.post("/permintaan/status", permintaan.updateStatus);
 
