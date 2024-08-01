@@ -25,7 +25,7 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, id_penugasan } = req.body;
 
   try {
     const user = await db.User.findOne({ where: { username } });
@@ -35,11 +35,30 @@ exports.login = async (req, res) => {
         .json({ message: "Authentication failed. User not found." });
     }
 
-    bcryptjs.compare(password, user.password, (err, result) => {
+    bcryptjs.compare(password, user.password, async (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: "Internal server error." });
+      }
       if (result) {
-        return res
-          .status(200)
-          .json({ message: "Authentication successful!", data: user });
+        try {
+          const assignments = await exports.findUserAssignments(
+            user.id,
+            id_penugasan
+          );
+          if (assignments.length > 0) {
+            return res.status(200).json({
+              message: "Authentication successful!",
+              data: user,
+              assignments: assignments,
+            });
+          } else {
+            return res
+              .status(404)
+              .json({ message: "No assignments found for the specified ID." });
+          }
+        } catch (error) {
+          return res.status(500).json({ message: error.message });
+        }
       } else {
         return res
           .status(401)
@@ -47,8 +66,29 @@ exports.login = async (req, res) => {
       }
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.findUserAssignments = async (userId, id_penugasan) => {
+  try {
+    const assignments = await db.Penugasan.findAll({
+      where: {
+        id: id_penugasan, // Ensure this condition is part of the query
+        [Op.or]: [
+          { pj_id: userId },
+          { wpj_id: userId },
+          { dalnis_id: userId },
+          { kt_id: userId },
+          { tim_id: { [Op.contains]: [userId] } },
+        ],
+      },
+    });
+
+    return assignments;
+  } catch (error) {
+    console.error("Error finding user assignments:", error);
+    throw new Error("Internal server error");
   }
 };
 
