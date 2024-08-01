@@ -66,9 +66,9 @@ router.delete("/notif/:id", notifCon.delete);
 //permintaan
 router.post("/permintaan", upload.single("file"), permintaan.add);
 router.get("/permintaan", permintaan.get);
+router.get("/permintaan", permintaan.get);
 router.get("/permintaan/:id", permintaan.getOne);
-router.get("/permintaan/:id", permintaan.getOne);
-router.put("/permintaan/:id", permintaan.update);
+router.put("/permintaan/:id", upload.single("file"), permintaan.update);
 router.delete("/permintaan/:id", permintaan.delete);
 router.post("/permintaan/status", permintaan.updateStatus);
 
