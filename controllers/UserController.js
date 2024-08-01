@@ -71,6 +71,30 @@ exports.getall = async (req, res) => {
   }
 };
 
+exports.UpdateUser = async (req, res) => {
+  const { id } = req.params; // assuming the kompilasi ID is passed as a URL parameter
+
+  try {
+    const [updated] = await db.User.update(req.body, {
+      where: { id: id },
+    });
+
+    if (updated) {
+      const updatedkompilasi = await db.User.findOne({
+        where: { id: id },
+      });
+      return res.status(200).json({
+        message: "User updated successfully!",
+        data: updatedkompilasi,
+      });
+    }
+    throw new Error("User not found");
+  } catch (error) {
+    console.error("Update kompilasi Error:", error);
+    res.status(500).json({ message: "Error updating User." });
+  }
+};
+
 exports.delete = async (req, res) => {
   const { id } = req.params; // assuming the role ID is passed as a URL parameter
 

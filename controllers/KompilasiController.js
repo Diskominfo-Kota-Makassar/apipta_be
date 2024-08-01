@@ -63,6 +63,30 @@ exports.addAksi = async (req, res) => {
   }
 };
 
+exports.UpdateAksi = async (req, res) => {
+  const { id } = req.params; // assuming the kompilasi ID is passed as a URL parameter
+
+  try {
+    const [updated] = await db.Aksi.update(req.body, {
+      where: { id: id },
+    });
+
+    if (updated) {
+      const updatedkompilasi = await db.Aksi.findOne({
+        where: { id: id },
+      });
+      return res.status(200).json({
+        message: "aksi updated successfully!",
+        data: updatedkompilasi,
+      });
+    }
+    throw new Error("aksi not found");
+  } catch (error) {
+    console.error("Update kompilasi Error:", error);
+    res.status(500).json({ message: "Error updating aksi." });
+  }
+};
+
 exports.get = async (req, res) => {
   try {
     const kompilasi = await db.Kompilasi.findAll({
