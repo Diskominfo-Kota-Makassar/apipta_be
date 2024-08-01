@@ -1,5 +1,6 @@
 const db = require("../models");
 const bcryptjs = require("bcryptjs");
+const { Op } = require("sequelize");
 
 // Example of Create operation
 exports.register = async (req, res) => {
@@ -80,7 +81,7 @@ exports.findUserAssignments = async (userId, id_penugasan) => {
           { wpj_id: userId },
           { dalnis_id: userId },
           { kt_id: userId },
-          { tim_id: { [Op.contains]: [userId] } },
+          db.Sequelize.literal(`JSON_CONTAINS(tim_id, '[${userId}]', '$')`),
         ],
       },
     });
