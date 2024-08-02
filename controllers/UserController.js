@@ -118,7 +118,10 @@ exports.getall = async (req, res) => {
 
 exports.UpdateUser = async (req, res) => {
   const { id } = req.params; // assuming the kompilasi ID is passed as a URL parameter
-
+  if (req.body.password != null) {
+    const salt = await bcryptjs.genSalt(10);
+    req.body.password = await bcryptjs.hash(req.body.password, salt);
+  }
   try {
     const [updated] = await db.User.update(req.body, {
       where: { id: id },
