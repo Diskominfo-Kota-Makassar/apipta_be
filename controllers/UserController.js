@@ -1,5 +1,6 @@
 const db = require("../models");
 const bcryptjs = require("bcryptjs");
+const { Op } = require("sequelize");
 
 // Example of Create operation
 exports.register = async (req, res) => {
@@ -25,7 +26,7 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, id_penugasan } = req.body;
 
   try {
     const user = await db.User.findOne({ where: { username } });
@@ -35,11 +36,34 @@ exports.login = async (req, res) => {
         .json({ message: "Authentication failed. User not found." });
     }
 
-    bcryptjs.compare(password, user.password, (err, result) => {
+    bcryptjs.compare(password, user.password, async (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: "Internal server error." });
+      }
       if (result) {
-        return res
-          .status(200)
-          .json({ message: "Authentication successful!", data: user });
+        return res.status(200).json({
+          message: "Authentication successful!",
+          data: user,
+        });
+        // try {
+        //   const assignments = await exports.findUserAssignments(
+        //     user.id,
+        //     id_penugasan
+        //   );
+        //   if (assignments.length > 0) {
+        //     return res.status(200).json({
+        //       message: "Authentication successful!",
+        //       data: user,
+        //       assignments: assignments,
+        //     });
+        //   } else {
+        //     return res
+        //       .status(404)
+        //       .json({ message: "No assignments found for the specified ID." });
+        //   }
+        // } catch (error) {
+        //   return res.status(500).json({ message: error.message });
+        // }
       } else {
         return res
           .status(401)
@@ -47,8 +71,29 @@ exports.login = async (req, res) => {
       }
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.findUserAssignments = async (userId, id_penugasan) => {
+  try {
+    const assignments = await db.Penugasan.findAll({
+      where: {
+        id: id_penugasan, // Ensure this condition is part of the query
+        [Op.or]: [
+          { pj_id: userId },
+          { wpj_id: userId },
+          { dalnis_id: userId },
+          { kt_id: userId },
+          db.Sequelize.literal(`JSON_CONTAINS(tim_id, '[${userId}]', '$')`),
+        ],
+      },
+    });
+
+    return assignments;
+  } catch (error) {
+    console.error("Error finding user assignments:", error);
+    throw new Error("Internal server error");
   }
 };
 
@@ -68,6 +113,33 @@ exports.getall = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.UpdateUser = async (req, res) => {
+  const { id } = req.params; // assuming the kompilasi ID is passed as a URL parameter
+  if (req.body.password != null) {
+    const salt = await bcryptjs.genSalt(10);
+    req.body.password = await bcryptjs.hash(req.body.password, salt);
+  }
+  try {
+    const [updated] = await db.User.update(req.body, {
+      where: { id: id },
+    });
+
+    if (updated) {
+      const updatedkompilasi = await db.User.findOne({
+        where: { id: id },
+      });
+      return res.status(200).json({
+        message: "User updated successfully!",
+        data: updatedkompilasi,
+      });
+    }
+    throw new Error("User not found");
+  } catch (error) {
+    console.error("Update kompilasi Error:", error);
+    res.status(500).json({ message: "Error updating User." });
   }
 };
 

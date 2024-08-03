@@ -100,6 +100,36 @@ exports.update = async (req, res) => {
   const { id } = req.params; // assuming the role ID is passed as a URL parameter
 
   try {
+    if (!req.file) {
+      return res.status(400).send("No file uploaded.");
+    }
+
+    const fileName = Date.now() + "_" + req.file.originalname;
+    const filePath = `${fileName}`;
+    minioClient.putObject(
+      "inspektorat",
+      filePath,
+      req.file.buffer,
+      (err, etag) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).send(err);
+        }
+        db.permintaan
+          .update(
+            { file: filePath },
+            {
+              where: { id: id },
+            }
+          )
+          .then(
+            () => {}
+            // res.status(201).send({ message: "permintaan successful!" })
+          )
+          .catch((err) => res.status(500).send(err));
+      }
+    );
+
     const [updated] = await db.permintaan.update(req.body, {
       where: { id: id },
     });

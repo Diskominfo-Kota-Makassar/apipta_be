@@ -23,6 +23,7 @@ router.post("/login", rr.login);
 
 //user
 router.get("/user/all", rr.getall);
+router.put("/user/:id", rr.UpdateUser);
 router.delete("/user/:id", rr.delete);
 
 //chats
@@ -40,6 +41,7 @@ router.delete("/roles/:id", roleController.delete);
 router.post("/kompilasi", kompilasiCont.add);
 router.post("/rekomendasi", kompilasiCont.addRekom);
 router.post("/aksi", kompilasiCont.addAksi);
+router.put("/aksi/:id", kompilasiCont.UpdateAksi);
 router.get("/kompilasi", kompilasiCont.get);
 router.get("/kompilasi/:id", kompilasiCont.getOne);
 router.put("/kompilasi/:id", kompilasiCont.update);
@@ -66,9 +68,9 @@ router.delete("/notif/:id", notifCon.delete);
 //permintaan
 router.post("/permintaan", upload.single("file"), permintaan.add);
 router.get("/permintaan", permintaan.get);
+router.get("/permintaan", permintaan.get);
 router.get("/permintaan/:id", permintaan.getOne);
-router.get("/permintaan/:id", permintaan.getOne);
-router.put("/permintaan/:id", permintaan.update);
+router.put("/permintaan/:id", upload.single("file"), permintaan.update);
 router.delete("/permintaan/:id", permintaan.delete);
 router.post("/permintaan/status", permintaan.updateStatus);
 
