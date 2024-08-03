@@ -24,6 +24,8 @@ module.exports = (sequelize, DataTypes) => {
       dalnis_id: DataTypes.INTEGER,
       catatan_kpk: DataTypes.STRING,
       catatan_pj: DataTypes.STRING,
+      catatan_dalnis: DataTypes.STRING,
+      catatan_wpj: DataTypes.STRING,
       bpkp: DataTypes.STRING,
       tim_id: {
         type: DataTypes.JSON, // Use JSON to store array

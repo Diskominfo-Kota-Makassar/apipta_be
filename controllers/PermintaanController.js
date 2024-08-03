@@ -149,7 +149,7 @@ exports.update = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-  const { id } = req.params; 
+  const { id } = req.params;
 
   try {
     const permintaan = await db.permintaan.findOne({ where: { id: id } });
