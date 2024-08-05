@@ -175,20 +175,28 @@ exports.userFileUpdate = async (req, res) => {
       filePath,
       req.file.buffer
     );
-    const userfileCheck = await db.UserFile.findByPk(id);
+    const dataaaa = await db.UserFile.update(
+      {
+        file: filePath,
+      },
+      {
+        where: { id: id },
+      }
+    );
+    // const userfileCheck = await db.UserFile.findByPk(id);
 
-    // Check if the permintaan exists
-    if (!userfileCheck) {
-      console.log(`No userfile found with ID: ${id}`); // Debug log
-      return res.status(404).json({ message: "userfile not found" });
-    }
+    // // Check if the permintaan exists
+    // if (!userfileCheck) {
+    //   console.log(`No userfile found with ID: ${id}`); // Debug log
+    //   return res.status(404).json({ message: "userfile not found" });
+    // }
 
-    // Update the status
-    await UserFile.update({ file: filePath });
+    // // Update the status
+    // await UserFile.update({ file: filePath });
 
     res.status(201).send({
       message: "UserFile updated successfully!",
-      auditKka: newUserFile,
+      // auditKka: newUserFile,
     });
   } catch (err) {
     console.error(err);

@@ -82,7 +82,7 @@ router.post(
   auditCon.userFileAdd
 );
 
-router.post(
+router.put(
   "/audit_kka/user/file/update/:id",
   upload.single("file"),
   auditCon.userFileUpdate
