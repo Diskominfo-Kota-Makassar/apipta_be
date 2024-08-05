@@ -81,6 +81,12 @@ router.post(
   upload.single("file"),
   auditCon.userFileAdd
 );
+
+router.post(
+  "/audit_kka/user/file/update/:id",
+  upload.single("file"),
+  auditCon.userFileUpdate
+);
 router.post(
   "/audit_kka/obrik/file",
   upload.single("file"),

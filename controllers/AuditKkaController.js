@@ -161,6 +161,41 @@ exports.userFileAdd = async (req, res) => {
   }
 };
 
+exports.userFileUpdate = async (req, res) => {
+  const { id } = req.params;
+  if (!req.file) {
+    return res.status(400).send("No file uploaded.");
+  }
+  try {
+    const fileName = Date.now() + "_" + req.file.originalname;
+    const filePath = `${fileName}`;
+
+    await minioClient.putObject(
+      process.env.MINIO_BUCKET,
+      filePath,
+      req.file.buffer
+    );
+    const userfileCheck = await db.UserFile.findByPk(id);
+
+    // Check if the permintaan exists
+    if (!userfileCheck) {
+      console.log(`No userfile found with ID: ${id}`); // Debug log
+      return res.status(404).json({ message: "userfile not found" });
+    }
+
+    // Update the status
+    await UserFile.update({ file: filePath });
+
+    res.status(201).send({
+      message: "UserFile updated successfully!",
+      auditKka: newUserFile,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(err);
+  }
+};
+
 exports.add = async (req, res) => {
   const { id_audit, tim_ketua, catatan_review, catatan_wpj, hasil_pengujian } =
     req.body;
