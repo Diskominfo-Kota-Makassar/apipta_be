@@ -94,87 +94,90 @@ exports.get = async (req, res) => {
         { model: db.Penugasan, as: "penugasan" },
         {
           model: db.Rekomendasi,
-          as: "rekomendasis", // Use the alias defined in the association
-          include: [
-            {
-              model: db.Aksi,
-              as: "aksis", // Use the alias defined in the association
-            },
-          ],
+          as: "rekomendasis",
+          include: [{ model: db.Aksi, as: "aksis" }],
         },
       ],
     });
-    for (const datakom of kompilasi) {
-      if (datakom.penugasan) {
-        // Get user name for kt_id
-        if (datakom.penugasan.kt_id) {
-          const userKT = await db.User.findOne({
-            where: { id: datakom.penugasan.kt_id },
-          });
-          datakom.penugasan.setDataValue(
-            "nama_kt",
-            userKT ? userKT.nama : null
-          );
+
+    // Process and format the data to exclude specific properties
+    const result = await Promise.all(
+      kompilasi.map(async (datakom) => {
+        if (datakom.penugasan) {
+          const {
+            catatan_kpk,
+            catatan_pj,
+            catatan_dalnis,
+            catatan_wpj,
+            uraian,
+            ...penugasanData
+          } = datakom.penugasan.get({ plain: true });
+
+          if (datakom.penugasan.kt_id) {
+            const userKT = await db.User.findOne({
+              where: { id: datakom.penugasan.kt_id },
+            });
+            penugasanData.nama_kt = userKT ? userKT.nama : null;
+            penugasanData.nip_kt = userKT ? userKT.nip : null;
+          }
+
+          if (datakom.penugasan.pj_id) {
+            const userPJ = await db.User.findOne({
+              where: { id: datakom.penugasan.pj_id },
+            });
+            penugasanData.nama_pj = userPJ ? userPJ.nama : null;
+            penugasanData.nip_pj = userPJ ? userPJ.nip_pj : null;
+          }
+
+          if (datakom.penugasan.wpj_id) {
+            const userWPJ = await db.User.findOne({
+              where: { id: datakom.penugasan.wpj_id },
+            });
+            penugasanData.nama_wpj = userWPJ ? userWPJ.nama : null;
+            penugasanData.nip_wpj = userWPJ ? userWPJ.nip : null;
+          }
+
+          if (datakom.penugasan.dalnis_id) {
+            const userDalnis = await db.User.findOne({
+              where: { id: datakom.penugasan.dalnis_id },
+            });
+            penugasanData.nama_dalnis = userDalnis ? userDalnis.nama : null;
+            penugasanData.nip_dalnis = userDalnis ? userDalnis.nip : null;
+          }
+
+          if (datakom.penugasan.obrik_id) {
+            const userObrik = await db.User.findOne({
+              where: { id: datakom.penugasan.obrik_id },
+            });
+            penugasanData.nama_obrik = userObrik ? userObrik.nama : null;
+            penugasanData.nip_obrik = userObrik ? userObrik.nip : null;
+          }
+
+          if (datakom.penugasan.tim_id) {
+            const timIds = JSON.parse(datakom.penugasan.tim_id);
+            const usersTim = await db.User.findAll({ where: { id: timIds } });
+            penugasanData.tim = usersTim.map((user) => ({
+              nama: user.nama,
+              nip: user.nip,
+            }));
+          }
+
+          return {
+            ...datakom.get({ plain: true }),
+            penugasan: penugasanData,
+          };
         }
 
-        // Get user name for pj_id
-        if (datakom.penugasan.pj_id) {
-          const userPJ = await db.User.findOne({
-            where: { id: datakom.penugasan.pj_id },
-          });
-          datakom.penugasan.setDataValue(
-            "nama_pj",
-            userPJ ? userPJ.nama : null
-          );
-        }
+        return datakom.get({ plain: true });
+      })
+    );
 
-        // Get user name for wpj_id
-        if (datakom.penugasan.wpj_id) {
-          const userWPJ = await db.User.findOne({
-            where: { id: datakom.penugasan.wpj_id },
-          });
-          datakom.penugasan.setDataValue(
-            "nama_wpj",
-            userWPJ ? userWPJ.nama : null
-          );
-        }
-
-        // Get user name for dalnis_id
-        if (datakom.penugasan.dalnis_id) {
-          const userDalnis = await db.User.findOne({
-            where: { id: datakom.penugasan.dalnis_id },
-          });
-          datakom.penugasan.setDataValue(
-            "nama_dalnis",
-            userDalnis ? userDalnis.nama : null
-          );
-        }
-
-        if (datakom.penugasan.obrik_id) {
-          const userObrik = await db.User.findOne({
-            where: { id: datakom.penugasan.obrik_id },
-          });
-          datakom.penugasan.setDataValue(
-            "nama_obrik",
-            userObrik ? userObrik.nama : null
-          );
-        }
-
-        // Get user names for tim_id (assuming tim_id is an array of JSON)
-        if (datakom.penugasan.tim_id) {
-          const timIds = JSON.parse(datakom.penugasan.tim_id);
-          const usersTim = await db.User.findAll({ where: { id: timIds } });
-          const namaTim = usersTim.map((user) => user.nama);
-          datakom.penugasan.setDataValue("nama_tim", namaTim);
-        }
-      }
-    }
-
-    return res
-      .status(200)
-      .json({ message: "kompilasi successful!", data: kompilasi });
+    return res.status(200).json({
+      message: "kompilasi successful!",
+      data: result,
+    });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
