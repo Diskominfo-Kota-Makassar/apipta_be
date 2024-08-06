@@ -126,7 +126,7 @@ exports.get = async (req, res) => {
               where: { id: datakom.penugasan.pj_id },
             });
             penugasanData.nama_pj = userPJ ? userPJ.nama : null;
-            penugasanData.nip_pj = userPJ ? userPJ.nip_pj : null;
+            penugasanData.nip_pj = userPJ ? userPJ.nip : null;
           }
 
           if (datakom.penugasan.wpj_id) {
