@@ -91,6 +91,7 @@ exports.get = async (req, res) => {
   try {
     const kompilasi = await db.Kompilasi.findAll({
       include: [
+        { model: db.Penugasan, as: "penugasan" },
         {
           model: db.Rekomendasi,
           as: "rekomendasis", // Use the alias defined in the association
@@ -103,6 +104,72 @@ exports.get = async (req, res) => {
         },
       ],
     });
+    for (const datakom of kompilasi) {
+      if (datakom.penugasan) {
+        // Get user name for kt_id
+        if (datakom.penugasan.kt_id) {
+          const userKT = await db.User.findOne({
+            where: { id: datakom.penugasan.kt_id },
+          });
+          datakom.penugasan.setDataValue(
+            "nama_kt",
+            userKT ? userKT.nama : null
+          );
+        }
+
+        // Get user name for pj_id
+        if (datakom.penugasan.pj_id) {
+          const userPJ = await db.User.findOne({
+            where: { id: datakom.penugasan.pj_id },
+          });
+          datakom.penugasan.setDataValue(
+            "nama_pj",
+            userPJ ? userPJ.nama : null
+          );
+        }
+
+        // Get user name for wpj_id
+        if (datakom.penugasan.wpj_id) {
+          const userWPJ = await db.User.findOne({
+            where: { id: datakom.penugasan.wpj_id },
+          });
+          datakom.penugasan.setDataValue(
+            "nama_wpj",
+            userWPJ ? userWPJ.nama : null
+          );
+        }
+
+        // Get user name for dalnis_id
+        if (datakom.penugasan.dalnis_id) {
+          const userDalnis = await db.User.findOne({
+            where: { id: datakom.penugasan.dalnis_id },
+          });
+          datakom.penugasan.setDataValue(
+            "nama_dalnis",
+            userDalnis ? userDalnis.nama : null
+          );
+        }
+
+        if (datakom.penugasan.obrik_id) {
+          const userObrik = await db.User.findOne({
+            where: { id: datakom.penugasan.obrik_id },
+          });
+          datakom.penugasan.setDataValue(
+            "nama_obrik",
+            userObrik ? userObrik.nama : null
+          );
+        }
+
+        // Get user names for tim_id (assuming tim_id is an array of JSON)
+        if (datakom.penugasan.tim_id) {
+          const timIds = JSON.parse(datakom.penugasan.tim_id);
+          const usersTim = await db.User.findAll({ where: { id: timIds } });
+          const namaTim = usersTim.map((user) => user.nama);
+          datakom.penugasan.setDataValue("nama_tim", namaTim);
+        }
+      }
+    }
+
     return res
       .status(200)
       .json({ message: "kompilasi successful!", data: kompilasi });

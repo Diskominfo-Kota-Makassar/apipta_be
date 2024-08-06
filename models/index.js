@@ -51,6 +51,7 @@ db.Role = require("./role")(sequelize, Sequelize);
 db.Audit = require("./audit_kka")(sequelize, Sequelize);
 db.UserFile = require("./user_file")(sequelize, Sequelize);
 db.Kompilasi = require("./kompilasi")(sequelize, Sequelize);
+db.Penugasan = require("./penugasan")(sequelize, Sequelize);
 db.Rekomendasi = require("./rekomendasi")(sequelize, Sequelize);
 db.Aksi = require("./aksi")(sequelize, Sequelize);
 db.Notif = require("./notif")(sequelize, Sequelize);

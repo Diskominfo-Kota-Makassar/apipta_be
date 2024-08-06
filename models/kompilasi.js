@@ -1,18 +1,15 @@
 "use strict";
 const { Model } = require("sequelize");
-
 module.exports = (sequelize, DataTypes) => {
   class Kompilasi extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // Define the association here
       Kompilasi.hasMany(models.Rekomendasi, {
         foreignKey: "id_kompilasi",
-        as: "rekomendasis", // Use a different alias to avoid collision
+        as: "rekomendasis", // Alias unik
+      });
+      Kompilasi.belongsTo(models.Penugasan, {
+        foreignKey: "penugasan_id", // Pastikan ini adalah foreignKey yang benar
+        as: "penugasan", // Gunakan alias yang berbeda dari "penugasankompilasi"
       });
     }
   }
@@ -24,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
       sebab: DataTypes.STRING,
       akibat: DataTypes.STRING,
       no_lhp: DataTypes.STRING,
+      tgl_lhp: DataTypes.STRING,
+      temuan: DataTypes.STRING,
+      no_temuan: DataTypes.STRING,
+      penugasan_id: DataTypes.INTEGER,
     },
     {
       sequelize,
