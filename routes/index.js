@@ -76,6 +76,7 @@ router.post("/permintaan/status", permintaan.updateStatus);
 
 //audit_kka
 router.post("/audit_kka/awal", auditCon.firstAdd);
+router.get("/audit_kka/user/file/all", auditCon.getGroupedUserFiles);
 router.post(
   "/audit_kka/user/file",
   upload.single("file"),

@@ -132,6 +132,40 @@ exports.bpkpFileAdd = async (req, res) => {
   }
 };
 
+exports.getGroupedUserFiles = async (req, res) => {
+  try {
+    // Fetch all user files
+    const userFiles = await db.UserFile.findAll({
+      attributes: ["penugasan_id", "file"],
+      raw: true, // Raw data
+    });
+
+    // Group data by penugasan_id
+    const groupedData = userFiles.reduce((acc, file) => {
+      const { penugasan_id, file: fileName } = file;
+      if (!acc[penugasan_id]) {
+        acc[penugasan_id] = [];
+      }
+      acc[penugasan_id].push(fileName);
+      return acc;
+    }, {});
+
+    // Convert groupedData into an array format
+    const result = Object.entries(groupedData).map(([penugasan_id, files]) => ({
+      penugasan_id,
+      files,
+    }));
+
+    return res.status(200).json({
+      message: "User files grouped by penugasan_id retrieved successfully!",
+      data: result,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 exports.userFileAdd = async (req, res) => {
   const { penugasan_id, user_id } = req.body;
   if (!req.file) {
