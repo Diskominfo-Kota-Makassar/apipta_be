@@ -2,6 +2,8 @@ const db = require("../models");
 const minioClient = require("../services/minio");
 require("dotenv").config();
 
+const bucketName = process.env.MINIO_BUCKET || "inspektorat";
+
 exports.firstAdd = async (req, res) => {
   const {
     no_penugasan,
@@ -78,7 +80,7 @@ exports.obrikFileAdd = async (req, res) => {
     const fileName = Date.now() + "_" + req.file.originalname;
     const filePath = `${fileName}`;
     await minioClient.putObject(
-      process.env.MINIO_BUCKET,
+      bucketName,
       filePath,
       req.file.buffer
     );
@@ -110,7 +112,7 @@ exports.bpkpFileAdd = async (req, res) => {
     const fileName = Date.now() + "_" + req.file.originalname;
     const filePath = `${fileName}`;
     await minioClient.putObject(
-      process.env.MINIO_BUCKET,
+      bucketName,
       filePath,
       req.file.buffer
     );
@@ -176,7 +178,7 @@ exports.userFileAdd = async (req, res) => {
     const filePath = `${fileName}`;
 
     await minioClient.putObject(
-      process.env.MINIO_BUCKET,
+      bucketName,
       filePath,
       req.file.buffer
     );
@@ -205,7 +207,7 @@ exports.userFileUpdate = async (req, res) => {
     const filePath = `${fileName}`;
 
     await minioClient.putObject(
-      process.env.MINIO_BUCKET,
+      bucketName,
       filePath,
       req.file.buffer
     );
@@ -252,7 +254,7 @@ exports.add = async (req, res) => {
     const fileKesimpulanName = Date.now() + "_" + fileKesimpulan.originalname;
     const fileKesimpulanPath = `${fileKesimpulanName}`;
     await minioClient.putObject(
-      process.env.MINIO_BUCKET,
+      bucketName,
       fileKesimpulanPath,
       fileKesimpulan.buffer
     );
@@ -262,7 +264,7 @@ exports.add = async (req, res) => {
     const fileBuktiDukungName = Date.now() + "_" + fileBuktiDukung.originalname;
     const fileBuktiDukungPath = `${fileBuktiDukungName}`;
     await minioClient.putObject(
-      process.env.MINIO_BUCKET,
+      bucketName,
       fileBuktiDukungPath,
       fileBuktiDukung.buffer
     );
@@ -275,7 +277,7 @@ exports.add = async (req, res) => {
       const fileName = Date.now() + "_" + file.originalname;
       const filePath = `${fileName}`;
       await minioClient.putObject(
-        process.env.MINIO_BUCKET,
+        bucketName,
         filePath,
         file.buffer
       );

@@ -121,35 +121,62 @@ router.get("/health", (req, res) => {
   res.status(200).send("Server is healthy!");
 });
 
-//? showfile MinIO
-router.get("/file/:objectName", (req, res) => {
-  const { objectName } = req.params;
+// Helper for serving minio file (read/inline or download/attachment)
+const serveMinioFile = async (req, res, isDownload = false) => {
+  try {
+    const objectName = decodeURIComponent(req.params.objectName);
+    const bucketName = process.env.MINIO_BUCKET || "inspektorat";
+    const downloadRequested =
+      isDownload ||
+      req.query.download === "true" ||
+      req.query.action === "download";
 
-  minioClient.getObject(
-    process.env.MINIO_BUCKET,
-    objectName,
-    (err, dataStream) => {
-      if (err) {
-        console.error("Error fetching object from MinIO:", err);
-        return res.status(500).json({ error: "Internal Server Error" });
-      }
+    // Clean original filename by stripping timestamp prefix (e.g. 1712345678_file.pdf -> file.pdf)
+    const displayName = objectName.replace(/^\d+_/, "") || objectName;
+    const mimeType = mime.lookup(objectName) || "application/octet-stream";
 
-      const mimeType = mime.lookup(objectName) || "application/octet-stream";
-      res.setHeader("Content-Disposition", "inline");
-      res.setHeader("Content-Type", mimeType);
-      res.setHeader(
-        "Cache-Control",
-        "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
-      );
+    const dataStream = await minioClient.getObject(bucketName, objectName);
 
-      dataStream.on("error", (streamErr) => {
-        console.error("Error during streaming:", streamErr);
+    res.setHeader(
+      "Content-Disposition",
+      `${downloadRequested ? "attachment" : "inline"}; filename="${displayName}"`
+    );
+    res.setHeader("Content-Type", mimeType);
+    res.setHeader(
+      "Cache-Control",
+      "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+    );
+
+    dataStream.on("error", (streamErr) => {
+      console.error("Error during streaming from MinIO:", streamErr);
+      if (!res.headersSent) {
         res.status(500).json({ error: "Error during streaming" });
-      });
+      }
+    });
 
-      dataStream.pipe(res);
+    dataStream.pipe(res);
+  } catch (err) {
+    console.error("Error fetching object from MinIO:", err);
+    if (err.code === "NoSuchKey" || err.code === "NotFound") {
+      return res.status(404).json({ error: "File not found" });
     }
-  );
+    if (err.code === "AccessDenied") {
+      return res.status(403).json({ error: "Access Denied by MinIO" });
+    }
+    return res
+      .status(500)
+      .json({ error: err.message || "Internal Server Error" });
+  }
+};
+
+//? Download file MinIO (attachment)
+router.get("/file/download/:objectName", (req, res) => {
+  serveMinioFile(req, res, true);
+});
+
+//? Show / Read file MinIO (inline, or download if ?download=true)
+router.get("/file/:objectName", (req, res) => {
+  serveMinioFile(req, res, false);
 });
 
 module.exports = router;

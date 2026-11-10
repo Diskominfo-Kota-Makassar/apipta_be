@@ -2,6 +2,8 @@ const db = require("../models");
 const minioClient = require("../services/minio");
 require("dotenv").config();
 
+const bucketName = process.env.MINIO_BUCKET || "inspektorat";
+
 exports.add = async (req, res) => {
   const { no, tgl_penugasan, uraian, no_ref_kka, no_ref_pka, judul_doc, ket } =
     req.body;
@@ -13,7 +15,7 @@ exports.add = async (req, res) => {
   const fileName = Date.now() + "_" + req.file.originalname;
   const filePath = `${fileName}`;
   minioClient.putObject(
-    "inspektorat",
+    bucketName,
     filePath,
     req.file.buffer,
     (err, etag) => {
@@ -107,7 +109,7 @@ exports.update = async (req, res) => {
     const fileName = Date.now() + "_" + req.file.originalname;
     const filePath = `${fileName}`;
     minioClient.putObject(
-      "inspektorat",
+      bucketName,
       filePath,
       req.file.buffer,
       (err, etag) => {
