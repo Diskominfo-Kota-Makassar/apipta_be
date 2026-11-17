@@ -68,6 +68,23 @@ describe("Security Audit Verification (F01 - F04)", () => {
     expect(res.status).toBe(403);
   });
 
+  // Public endpoints: roles dan penugasan harus bisa diakses publik untuk dropdown frontend
+  it("GET /api/roles should be publicly accessible without token", async () => {
+    const res = await request(app).get("/api/roles");
+    expect(res.status).not.toBe(401);
+  });
+
+  it("GET /api/penugasan should be publicly accessible without token", async () => {
+    const res = await request(app).get("/api/penugasan");
+    expect(res.status).not.toBe(401);
+  });
+
+  // Namun GET /api/roles/user yang berisi data user tetap wajib terlindungi (401)
+  it("GET /api/roles/user should remain protected (401 without token)", async () => {
+    const res = await request(app).get("/api/roles/user");
+    expect(res.status).toBe(401);
+  });
+
   // F04: Endpoint file tanpa token harus ditolak 401
   it("F04: GET /api/file/:objectName without token should return 401 Unauthorized", async () => {
     const res = await request(app).get("/api/file/document.pdf");

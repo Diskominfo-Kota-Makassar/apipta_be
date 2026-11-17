@@ -79,6 +79,11 @@ router.get("/health", (req, res) => {
 router.post("/login", loginRateLimit, rr.login);
 router.post("/register", loginRateLimit, rr.register);
 
+// Public data & dropdown (digunakan sebelum login oleh frontend)
+router.get("/roles", roleController.get);
+router.get("/penugasan", penugasan.get);
+router.get("/penugasan/:id", penugasan.getOne);
+
 // ==========================================
 // 2. PROTECTED ROUTES (Require Authentication)
 // ==========================================
@@ -97,7 +102,6 @@ router.get("/chats/:pengirim", requireAuth, rc.getchat);
 
 // Roles (F01)
 router.post("/roles", requireAuth, requireAdmin, roleController.add);
-router.get("/roles", requireAuth, roleController.get);
 router.get("/roles/user", requireAuth, requireAdmin, roleController.getAllRolesWithUsers);
 router.put("/roles/:id", requireAuth, requireAdmin, roleController.update);
 router.delete("/roles/:id", requireAuth, requireAdmin, roleController.delete);
@@ -115,10 +119,8 @@ router.delete("/kompilasi/:id", requireAuth, requireAdmin, kompilasiCont.delete)
 router.delete("/kompilasi/aksi/:id", requireAuth, requireAdmin, kompilasiCont.deleteAksi);
 router.delete("/kompilasi/rekomendasi/:id", requireAuth, requireAdmin, kompilasiCont.deleteRekomendasi);
 
-// Penugasan
+// Penugasan (Mutation)
 router.post("/penugasan", requireAuth, penugasan.add);
-router.get("/penugasan", requireAuth, penugasan.get);
-router.get("/penugasan/:id", requireAuth, penugasan.getOne);
 router.put("/penugasan/:id", requireAuth, penugasan.update);
 router.delete("/penugasan/:id", requireAuth, requireAdmin, penugasan.delete);
 
