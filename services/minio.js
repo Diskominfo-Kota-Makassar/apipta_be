@@ -28,44 +28,18 @@ const minioClient = new Minio.Client({
 
 const bucketName = process.env.MINIO_BUCKET || "inspektorat";
 
-// Policy to allow read and download (public/anonymous access)
-const getReadPolicy = (bucket) =>
-  JSON.stringify({
-    Version: "2012-10-17",
-    Statement: [
-      {
-        Sid: "PublicReadGetObject",
-        Effect: "Allow",
-        Principal: "*",
-        Action: ["s3:GetBucketLocation", "s3:ListBucket"],
-        Resource: [`arn:aws:s3:::${bucket}`],
-      },
-      {
-        Sid: "PublicReadObject",
-        Effect: "Allow",
-        Principal: "*",
-        Action: ["s3:GetObject"],
-        Resource: [`arn:aws:s3:::${bucket}/*`],
-      },
-    ],
-  });
-
+// Initialize bucket without setting public policy (Keep bucket strictly private)
 const initBucket = async () => {
   try {
     const exists = await minioClient.bucketExists(bucketName);
     if (!exists) {
       await minioClient.makeBucket(bucketName, "us-east-1");
-      console.log(`Bucket '${bucketName}' created successfully`);
+      console.log(`Bucket '${bucketName}' created successfully (Private)`);
     } else {
-      console.log(`Bucket '${bucketName}' already exists`);
+      console.log(`Bucket '${bucketName}' verified (Private storage)`);
     }
-
-    await minioClient.setBucketPolicy(bucketName, getReadPolicy(bucketName));
-    console.log(
-      `Bucket policy for '${bucketName}' set successfully (Public Read/Download)`
-    );
   } catch (err) {
-    console.error("Error initializing MinIO bucket/policy:", err);
+    console.error("Error verifying MinIO bucket:", err);
   }
 };
 

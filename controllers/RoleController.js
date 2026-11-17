@@ -30,13 +30,26 @@ exports.getAllRolesWithUsers = async (req, res) => {
         {
           model: db.User,
           as: "users",
+          attributes: { exclude: ["password"] },
         },
       ],
     });
 
+    // Sanitize any nested user records to guarantee no hash/secret leakage
+    const sanitizedData = rolesWithUsers.map((r) => {
+      const roleObj = r.toJSON ? r.toJSON() : { ...r };
+      if (roleObj.users && Array.isArray(roleObj.users)) {
+        roleObj.users = roleObj.users.map((u) => {
+          const { password, ...safeUser } = u;
+          return safeUser;
+        });
+      }
+      return roleObj;
+    });
+
     res.status(200).json({
       message: "Roles and associated users fetched successfully",
-      data: rolesWithUsers,
+      data: sanitizedData,
     });
   } catch (error) {
     console.error("Error fetching roles with users:", error);

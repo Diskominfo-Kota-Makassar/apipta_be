@@ -11,6 +11,12 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
+
+    toSafeObject() {
+      const values = { ...(this.dataValues || this) };
+      delete values.password;
+      return values;
+    }
   }
   User.init(
     {
@@ -37,14 +43,26 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "users",
+      defaultScope: {
+        attributes: { exclude: ["password"] },
+      },
+      scopes: {
+        withPassword: {
+          attributes: {},
+        },
+      },
       hooks: {
         beforeCreate: async (user) => {
-          const salt = await bcryptjs.genSalt(10);
-          user.password = await bcryptjs.hash(user.password, salt);
+          if (user.password && !user.password.startsWith("$2")) {
+            const salt = await bcryptjs.genSalt(10);
+            user.password = await bcryptjs.hash(user.password, salt);
+          }
         },
         beforeUpdate: async (user) => {
-          const salt = await bcryptjs.genSalt(10);
-          user.password = await bcryptjs.hash(user.password, salt);
+          if (user.changed("password") && user.password && !user.password.startsWith("$2")) {
+            const salt = await bcryptjs.genSalt(10);
+            user.password = await bcryptjs.hash(user.password, salt);
+          }
         },
       },
     }
